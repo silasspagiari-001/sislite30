@@ -1,0 +1,75 @@
+unit untFrmINDICATIVO;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniPanel, uniButton, uniBitBtn,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, uniPageControl, uniBasicGrid, uniDBGrid;
+
+type
+  TfrmINDICATIVO = class(TUniForm)
+    rcBlock10: TUniContainerPanel;
+    paBaseButtons: TUniContainerPanel;
+    paNAE: TUniContainerPanel;
+    btnNewReg: TUniBitBtn;
+    btnEditReg: TUniBitBtn;
+    btnDeleteReg: TUniBitBtn;
+    paGC: TUniContainerPanel;
+    btnSaveReg: TUniBitBtn;
+    btnCancelReg: TUniBitBtn;
+    btnCalcReg: TUniBitBtn;
+    FDQryCad: TFDQuery;
+    FDQryFiltro: TFDQuery;
+    dscrud: TDataSource;
+    dsfiltro: TDataSource;
+    UniPageControl: TUniPageControl;
+    UniTabSheetpesquisa: TUniTabSheet;
+    rcBlock30: TUniContainerPanel;
+    dbgSearchCRUD: TUniDBGrid;
+    procedure UniFormCreate(Sender: TObject);
+    procedure UniFormDestroy(Sender: TObject);
+    procedure UniFormReady(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    cMSG_BUGERROR_RECORDS_SELECTION,
+    cMSG_RECORDS_FOUND : string ;
+    cFormModal         : TUniForm;
+  end;
+
+function frmINDICATIVO: TfrmINDICATIVO;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  MainModule, uniGUIApplication;
+
+function frmINDICATIVO: TfrmINDICATIVO;
+begin
+  Result := TfrmINDICATIVO(mm.GetFormInstance(TfrmINDICATIVO));
+end;
+
+procedure TfrmINDICATIVO.UniFormCreate(Sender: TObject);
+begin
+  cFormModal := mm.varC_Form_Modal;
+end;
+
+procedure TfrmINDICATIVO.UniFormDestroy(Sender: TObject);
+begin
+  mm.varC_Form_Modal := nil;
+end;
+
+procedure TfrmINDICATIVO.UniFormReady(Sender: TObject);
+begin
+  Self.Top := ( UniSession.UniApplication.ScreenHeight  div 2 ) - ( self.Height div 2  );
+end;
+
+end.
