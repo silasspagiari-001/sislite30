@@ -64,6 +64,10 @@ object MainForm: TMainForm
         object tabDashBoard: TUniTabSheet
           Hint = ''
           Caption = '<i class="fa fa-home fa-1x"></i>'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 256
+          ExplicitHeight = 128
           object paGeral: TUniContainerPanel
             Left = 0
             Top = 0
@@ -83,8 +87,6 @@ object MainForm: TMainForm
               Align = alClient
               Color = 15395562
               TabOrder = 1
-              ScrollHeight = 1228
-              ScrollWidth = 759
               ScrollY = 679
               object rcBlock150: TUniContainerPanel
                 Tag = 4
@@ -557,48 +559,54 @@ object MainForm: TMainForm
         DesignSize = (
           833
           44)
-        object btnMenu: TUniLabel
+        object btnNotifications: TUniLabel
           AlignWithMargins = True
-          Left = 7
-          Top = 10
-          Width = 30
-          Height = 31
-          Cursor = crHandPoint
-          Hint = '[['#13#10'ico:fa-bars 1x |'#13#10'cls:rc-hover-zoom-1-2'#13#10']]'
-          Margins.Left = 0
-          Margins.Top = 10
-          CreateOrder = 1
-          TextConversion = txtHTML
-          AutoSize = False
-          Caption = '='
-          ParentFont = False
-          Font.Color = 15724527
-          Font.Height = -20
-          TabOrder = 1
-          OnClick = btnMenuClick
-        end
-        object labbtnExit: TUniLabel
-          AlignWithMargins = True
-          Left = 793
+          Left = 704
           Top = 13
-          Width = 30
+          Width = 34
           Height = 28
           Cursor = crHandPoint
-          Hint = '[['#13#10'ico:fa-power-off |'#13#10'cls:rc-hover-zoom-1-2'#13#10']]'
-          Margins.Left = 0
+          Hint = 
+            '[['#13#10'hide:mobile-v | '#13#10'ico:fa-envelope | '#13#10'cls:align-label-left-c' +
+            'enter rc-hover-zoom-1-2 | '#13#10'cls-caption:badge bg-warning | '#13#10'app' +
+            'end '#13#10']]'#13#10
           Margins.Top = 13
           Margins.Right = 10
           CreateOrder = 1
-          Alignment = taCenter
+          Visible = False
           TextConversion = txtHTML
           AutoSize = False
-          Caption = 'Off'
+          Caption = '3'
           Anchors = [akTop, akRight]
           ParentFont = False
           Font.Color = 15724527
           Font.Height = -16
-          TabOrder = 3
-          OnClick = labbtnExitClick
+          TabOrder = 5
+          OnClick = btnNotificationsClick
+        end
+        object btnUsuariosOnlineTop: TUniLabel
+          AlignWithMargins = True
+          Left = 658
+          Top = 13
+          Width = 34
+          Height = 28
+          Cursor = crHandPoint
+          Hint = 
+            '[['#13#10'hide:mobile-v | '#13#10'ico:fa-users | '#13#10'cls:align-label-left-cent' +
+            'er rc-hover-zoom-1-2 | '#13#10'cls-caption:badge bg-warning | '#13#10'append' +
+            ' '#13#10']]'#13#10
+          Margins.Top = 13
+          Margins.Right = 10
+          CreateOrder = 1
+          TextConversion = txtHTML
+          AutoSize = False
+          Caption = '0'
+          Anchors = [akTop, akRight]
+          ParentFont = False
+          Font.Color = 15724527
+          Font.Height = -16
+          TabOrder = 6
+          OnClick = btnUsuariosOnlineTopClick
         end
         object btnCfg: TUniLabel
           AlignWithMargins = True
@@ -624,54 +632,48 @@ object MainForm: TMainForm
           TabOrder = 4
           OnClick = btnCfgClick
         end
-        object btnUsuariosOnlineTop: TUniLabel
+        object labbtnExit: TUniLabel
           AlignWithMargins = True
-          Left = 643
+          Left = 793
           Top = 13
-          Width = 34
+          Width = 30
           Height = 28
           Cursor = crHandPoint
-          Hint = 
-            '[['#13#10'hide:mobile-v | '#13#10'ico:fa-users | '#13#10'cls:align-label-left-cent' +
-            'er rc-hover-zoom-1-2 | '#13#10'cls-caption:badge bg-warning | '#13#10'append' +
-            ' '#13#10']]'#13#10
+          Hint = '[['#13#10'ico:fa-power-off |'#13#10'cls:rc-hover-zoom-1-2'#13#10']]'
+          Margins.Left = 0
           Margins.Top = 13
           Margins.Right = 10
           CreateOrder = 1
+          Alignment = taCenter
           TextConversion = txtHTML
           AutoSize = False
-          Caption = '0'
+          Caption = 'Off'
           Anchors = [akTop, akRight]
           ParentFont = False
           Font.Color = 15724527
           Font.Height = -16
-          TabOrder = 6
-          OnClick = btnUsuariosOnlineTopClick
+          TabOrder = 3
+          OnClick = labbtnExitClick
         end
-        object btnNotifications: TUniLabel
+        object btnMenu: TUniLabel
           AlignWithMargins = True
-          Left = 706
-          Top = 13
-          Width = 34
-          Height = 28
+          Left = 7
+          Top = 10
+          Width = 30
+          Height = 31
           Cursor = crHandPoint
-          Hint = 
-            '[['#13#10'hide:mobile-v | '#13#10'ico:fa-envelope | '#13#10'cls:align-label-left-c' +
-            'enter rc-hover-zoom-1-2 | '#13#10'cls-caption:badge bg-warning | '#13#10'app' +
-            'end '#13#10']]'#13#10
-          Margins.Top = 13
-          Margins.Right = 10
+          Hint = '[['#13#10'ico:fa-bars 1x |'#13#10'cls:rc-hover-zoom-1-2'#13#10']]'
+          Margins.Left = 0
+          Margins.Top = 10
           CreateOrder = 1
-          Visible = False
           TextConversion = txtHTML
           AutoSize = False
-          Caption = '3'
-          Anchors = [akTop, akRight]
+          Caption = '='
           ParentFont = False
           Font.Color = 15724527
-          Font.Height = -16
-          TabOrder = 5
-          OnClick = btnNotificationsClick
+          Font.Height = -20
+          TabOrder = 1
+          OnClick = btnMenuClick
         end
         object labCompanyName: TUniLabel
           Left = 43
@@ -2907,8 +2909,8 @@ object MainForm: TMainForm
     Visible = False
     ParentColor = False
     TabOrder = 1
-    object labImgRight: TUniLabel
-      Left = 600
+    object labImgLeft: TUniLabel
+      Left = 168
       Top = 33
       Width = 34
       Height = 33
@@ -2918,29 +2920,11 @@ object MainForm: TMainForm
       Visible = False
       TextConversion = txtHTML
       AutoSize = False
-      Caption = '<i class="fa  fa-arrow-right fa-2x "></i>'
+      Caption = '<i class="fa  fa-arrow-left fa-2x "></i>'
       ParentFont = False
       Font.Color = clRed
       Font.Height = -12
-      TabOrder = 6
-      OnClick = btnMenuClick
-    end
-    object labImgUp: TUniLabel
-      Left = 208
-      Top = 0
-      Width = 34
-      Height = 33
-      Cursor = crHandPoint
-      Hint = ''
-      CreateOrder = 1
-      Visible = False
-      TextConversion = txtHTML
-      AutoSize = False
-      Caption = '<i class="fa  fa-arrow-up fa-2x "></i>'
-      ParentFont = False
-      Font.Color = clRed
-      Font.Height = -12
-      TabOrder = 5
+      TabOrder = 3
       OnClick = btnMenuClick
     end
     object labImgDown: TUniLabel
@@ -2961,8 +2945,26 @@ object MainForm: TMainForm
       TabOrder = 4
       OnClick = btnMenuClick
     end
-    object labImgLeft: TUniLabel
-      Left = 168
+    object labImgUp: TUniLabel
+      Left = 208
+      Top = 0
+      Width = 34
+      Height = 33
+      Cursor = crHandPoint
+      Hint = ''
+      CreateOrder = 1
+      Visible = False
+      TextConversion = txtHTML
+      AutoSize = False
+      Caption = '<i class="fa  fa-arrow-up fa-2x "></i>'
+      ParentFont = False
+      Font.Color = clRed
+      Font.Height = -12
+      TabOrder = 5
+      OnClick = btnMenuClick
+    end
+    object labImgRight: TUniLabel
+      Left = 600
       Top = 33
       Width = 34
       Height = 33
@@ -2972,11 +2974,11 @@ object MainForm: TMainForm
       Visible = False
       TextConversion = txtHTML
       AutoSize = False
-      Caption = '<i class="fa  fa-arrow-left fa-2x "></i>'
+      Caption = '<i class="fa  fa-arrow-right fa-2x "></i>'
       ParentFont = False
       Font.Color = clRed
       Font.Height = -12
-      TabOrder = 3
+      TabOrder = 6
       OnClick = btnMenuClick
     end
     object paObjFeatured: TUniContainerPanel

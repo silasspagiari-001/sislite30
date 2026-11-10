@@ -199,6 +199,7 @@ type
     FSessionDeployID: string;
     procedure rc_InitBannerDeploy;
     procedure rc_ExibeBannerAtualizacao(const AExibir: Boolean);
+    procedure rc_VerificaAtualizacaoDeploy;
 
     procedure rc_TrimAppMemorySize;
     procedure rc_UpdateNotificationsBadge(const AQtd: Integer);
@@ -234,12 +235,12 @@ type
   end;
 
 function MainForm: TMainForm;
-
 implementation
 
 {$R *.dfm}
 
 uses
+  uMenuTelemetry,
   uniGUIVars, MainModule, uniGUIApplication,
   uMenu_BASICS, uMenu_TOOLS, uMenu_MOVEMENT, uMenu_OTHERS, uMenu_REPORTS,
   mkm_menus, untdm_rc,
@@ -250,7 +251,8 @@ uses
   uDeployControl,
   untFrmAVISOFINANCEIRO,
   untFrmAVISOCOMUNICADO,
-  untFrmCADASTROCONTRATO;
+  untFrmCADASTROCONTRATO,
+  untfrmTELAAVISOMSG;
 
 function MainForm: TMainForm;
 begin
@@ -334,6 +336,7 @@ begin
   end;
 end;
 
+
 procedure TMainForm.rc_ExibeBannerAtualizacao(const AExibir: Boolean);
 begin
   rc_InitBannerDeploy;
@@ -347,9 +350,11 @@ begin
         paBannerDeploy.Top := paLayoutTopo.Top + paLayoutTopo.Height;
         paBannerDeploy.BringToFront;
       end;
+
     end;
   end;
 end;
+
 
 procedure TMainForm.btnPriorClick(Sender: TObject);
 begin
@@ -808,6 +813,7 @@ begin
     begin
     end);
 end;
+
 
 procedure TMainForm.btnCfgClick(Sender: TObject);
 begin
@@ -1554,24 +1560,23 @@ procedure TMainForm.AtualizaContadorUsuariosOnline;
 var
   nTotal: Integer;
 begin
-{
   try
     nTotal := rc_TotalUsuariosOnline;
     if (nTotal <= 0) and (mm <> nil) and (mm.varI_User > 0) then
       nTotal := 1;
 
-    if btnUsuariosOnlineTop <> nil then
-      btnUsuariosOnlineTop.Caption := '<i class="fas fa-users"></i><span class="badge bg-warning">' +
-        IntToStr(nTotal) + '</span>';
+    btnUsuariosOnlineTop.Caption := '<i class="fas fa-users"></i><span class="badge bg-warning">' +
+      IntToStr(nTotal) + '</span>';
   except
   end;
-  }
 end;
+
 
 procedure TMainForm.btnUsuariosOnlineTopClick(Sender: TObject);
 begin
   rc_AbrirChatUsuariosOnline;
 end;
+
 
 procedure TMainForm.TimerVerificatabelasTimer(Sender: TObject);
 var
@@ -1579,6 +1584,7 @@ var
   vChatAbertoID: Integer;
   vUltimoDeployID: string;
 begin
+  rc_VerificaAtualizacaoDeploy;
   // Verificacao de mensagens instantaneas e heartbeat do HyperServer em tempo real
   if (mm <> nil) and (mm.varI_User > 0) then
   begin
@@ -1616,8 +1622,8 @@ begin
         rc_ExibeBannerAtualizacao(False);
     end;
   end;
-
 end;
+
 
 procedure TMainForm.TimerChatTimer(Sender: TObject);
 var
@@ -1674,6 +1680,8 @@ var
   bEhMaster           : Boolean;
   iTentativas         : Integer;
 begin
+  if UpperCase(Trim(Caminho('LOCALHOST='))) <> 'LOCAL' then
+    begin
   Mensagem := nil;
   FinInfo  := nil;
   try
@@ -1786,7 +1794,9 @@ begin
 
             if bEhMaster then
             begin
-              gera_log('UniTimerverificawebTimer: Exibindo Aviso Financeiro ao usuario Master (Titulo #' + IntToStr(FinInfo.Codigo) + ', Venc: ' + FinInfo.Vencimento + ', Tolerancia: ' + IntToStr(FinInfo.DiasTolerancia) + ' dias)');
+              gera_log('UniTimerverificawebTimer: Exibindo Aviso Financeiro ao usuario Master (Titulo #' +
+                IntToStr(FinInfo.Codigo) + ', Venc: ' + FinInfo.Vencimento + ', Tolerancia: ' +
+                IntToStr(FinInfo.DiasTolerancia) + ' dias)');
               frmAVISOFINANCEIRO.CarregaAviso(
                 FinInfo.Codigo,
                 sContratoAtivo,
@@ -1904,7 +1914,9 @@ begin
     end;
   except
   end;
+    end;
 end;
+
 
 procedure TMainForm.UniTreeMainMenuClick(Sender: TObject);
 begin
@@ -1947,6 +1959,8 @@ var
 
         mm.varC_Table_Search           := ' ' + pTable + ' ';
         mm.varC_SelectedItem_FSideMenu := pOption;
+        rc_RegistraCliqueMenu(pOption, pTable);
+        rc_VerificaEnvioAgendado;
 
         // montar NOME DO FORM baseado no nome da TABELA contida no item do menu SELECIONADO
         // mount FORM NAME based on the TABLE name contained in the SELECTED menu item
@@ -2788,7 +2802,8 @@ begin
 
   Result :=
     '<style>' +
-    '  html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; height: 100%; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }' +
+    '  html, body { margin: 0; padding: 0; background: transparent; ' +
+    'overflow: hidden; height: 100%; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }' +
     '  .chart-wrapper { padding: 10px 15px; box-sizing: border-box; height: 100%; width: 100%; display: flex; flex-direction: column; }' +
     '  .chart-title { font-size: 13px; font-weight: 600; color: #4A5568; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }' +
     '</style>' +
@@ -2891,7 +2906,8 @@ begin
 
   Result :=
     '<style>' +
-    '  html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; height: 100%; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }' +
+    '  html, body { margin: 0; padding: 0; background: transparent; ' +
+    'overflow: hidden; height: 100%; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }' +
     '  .chart-wrapper { padding: 10px 15px; box-sizing: border-box; height: 100%; width: 100%; display: flex; flex-direction: column; }' +
     '  .chart-title { font-size: 13px; font-weight: 600; color: #4A5568; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }' +
     '</style>' +
@@ -3499,65 +3515,24 @@ begin
   btnNotifications.TextConversion := txtHTML;
   btnNotifications.Visible := True;
   btnNotifications.Caption := '<i class="fas fa-envelope"></i><span class="badge bg-warning">' + IntToStr(AQtd) + '</span>';
-
 end;
 
-initialization
-  RegisterAppFormClass(TMainForm);
 
-  UniAddCSSLibrary( 'css/flags/flags.css', False, [upoFolderFiles, upoPlatformBoth]);
+procedure TMainForm.rc_VerificaAtualizacaoDeploy;
+var
+  vUltimoDeployID: string;
+begin
+  if (FSessionDeployID = '') then
+    FSessionDeployID := rc_GetUltimoDeployID;
 
-  UniAddCSSLibrary( 'bootstrap-4.6.0/dist/css/bootstrap.min.css', False, [upoFolderFiles, upoPlatformBoth]);
-  UniAddJSLibrary( 'bootstrap-4.6.0/dist/js/bootstrap.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
+  if (FSessionDeployID <> '') then
+  begin
+    vUltimoDeployID := rc_GetUltimoDeployID;
+    if (vUltimoDeployID <> '') and (vUltimoDeployID <> FSessionDeployID) then
+      rc_ExibeBannerAtualizacao(True)
+    else
+      rc_ExibeBannerAtualizacao(False);
+  end;
+end;
 
-//  UniAddJSLibrary( 'js/jquery-3.5.1/jquery.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/jquery-3.5.1/jquery-3.5.1.min.map', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-//  UniAddCSSLibrary( 'js/jquery-ui-1.12.1/jquery-ui.min.css', False, [upoFolderFiles, upoPlatformBoth]);
-//  UniAddJSLibrary( 'js/jquery-ui-1.12.1/jquery-ui.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/jquery-inputmask/jquery.inputmask.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/jquery-inputmask/jquery.mask.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-//  UniAddJSLibrary( 'js/SweetAlert2/sweetalert2.min.css', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/SweetAlert2/sweetalert2.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-  // gauges and graphs
-  UniAddJSLibrary( 'js/tarefas/raphael-2.1.4.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/tarefas/justgage.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-  UniAddCSSLibrary( 'js/chart-js/dist/Chart.min.css', False, [upoFolderFiles, upoPlatformBoth]);
-  UniAddJSLibrary( 'js/chart-js/dist/Chart.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/chart-js/dist/utils.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-  UniAddCSSLibrary( 'js/toasty/dist/toasty.css', False, [upoFolderFiles, upoPlatformBoth]);
-  UniAddJSLibrary( 'js/toasty/dist/toasty.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-
-  UniAddCSSLibrary( 'js/chart-apex/dist/apexcharts.css', False, [upoFolderFiles, upoPlatformBoth]);
-  UniAddJSLibrary( 'js/chart-apex/dist/apexcharts.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/chart-apex/samples/assets/stock-prices.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  //( qrcode bug fix to solve )
-//  UniAddJSLibrary( 'js/rc_qrcode/qrcode.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/rc_qrcode/html5-qrcode.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-//  UniAddJSLibrary( 'js/rc_qrcode/rc-qrcode.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-  // GSAP está em fase de testes pra testar a total compatibilidade.
-  // Como cada usuário pode ter uma versão do uniGUI diferente, não tem como eu realizar todos os testes.
-  //
-  // GSAP is in the testing phase to test full compatibility.
-  // As each user can have a different version of uniGUI, there is no way for me to perform all the tests.
-  UniAddJSLibrary( 'js/gsap/gsap.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/CSSRulePlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/CSSRulePlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/Draggable.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/EaselPlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/EasePack.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/MotionPathPlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/PixiPlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/ScrollToPlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/ScrollTrigger.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  UniAddJSLibrary( 'js/gsap/TextPlugin.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-
-  //UniAddJSLibrary( 'js/rc_barcode/zxing.min.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
-  //UniAddJSLibrary( 'js/rc_barcode/rc_barcode.js', False, [upoFolderFiles, upoPlatformBoth, upoDefer]);
 end.
