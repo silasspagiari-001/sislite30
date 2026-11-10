@@ -102,6 +102,7 @@ uses
   mkm_qrcode in 'FUNCTIONS\mkm_qrcode.pas',
   untCadTB_COMPOUNDPK in 'formMENUS\MENU_BASICS\untCadTB_COMPOUNDPK.pas' {frmCadTB_COMPOUNDPK: TUniFrame},
   mkm_procedures in 'functions\mkm_procedures.pas',
+  uMenuTelemetry in 'functions\uMenuTelemetry.pas',
   mkm_funcoes in 'functions\mkm_funcoes.pas',
   untFrmPesquisa in 'frameBASE\untFrmPesquisa.pas' {frmPesquisa: TUniForm},
   untCadBANCOS in 'formMENUS\MENU_MOVEMENT\untCadBANCOS.pas' {frmcadBANCOS: TUniFrame},

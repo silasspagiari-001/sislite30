@@ -713,7 +713,6 @@ type
     procedure Seta_Busca(Const F_TABELA:string);
     function GetContratoAtivo: string;
     function GetContratoCadastrado: string;
-
   end;
 
 function mm: Tmm;
@@ -975,5 +974,6 @@ end;
 
 initialization
   RegisterMainModuleClass(Tmm);
+
 
 end.
